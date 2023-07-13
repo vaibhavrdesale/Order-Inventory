@@ -62,7 +62,6 @@ public class ProductsControllerTest {
 				post("/api/v1/products").contentType(MediaType.APPLICATION_JSON).content(asJsonString(productsDto)))
 				.andExpect(status().isOk());
 
-//		verify(productServices, times(1)).saveProduct(productsDto);
 	}
 
 	@Test
@@ -271,21 +270,22 @@ public class ProductsControllerTest {
 	@Test
 	@Disabled
 	void testUpdateProductNotFound() throws Exception {
-		ProductsDto productsDto = new ProductsDto();
+	    ProductsDto productsDto = new ProductsDto();
+	    productsDto.setProductName("Campus Shoes");
+	    productsDto.setUnitPrice(BigDecimal.valueOf(1));
+	    productsDto.setProductDetails("size-7,color-black");
 
-		productsDto.setProductName("Campus Shoes");
-		productsDto.setUnitPrice(BigDecimal.valueOf(1));
-		productsDto.setProductDetails("size-7,color-black");
+	    when(productServices.updateProduct(productsDto))
+	            .thenThrow(new ProductsNotFoundException("No product found for this id"));
 
-		when(productServices.updateProduct(productsDto))
-				.thenThrow(new ProductsNotFoundException("product not updated"));
+	    mockMvc.perform(put("/api/v1/products")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .content(asJsonString(productsDto)))
+	            .andExpect(status().isNotFound());
 
-		mockMvc.perform(
-				put("/api/v1/products").contentType(MediaType.APPLICATION_JSON).content(asJsonString(productsDto)))
-				.andExpect(status().isNotFound());
-
-		verify(productServices, times(1)).updateProduct(productsDto);
+	    verify(productServices, times(1)).updateProduct(productsDto);
 	}
+
 
 	public static String asJsonString(Object object) {
 		try {

@@ -29,12 +29,8 @@ public class InventoryController {
 
 	@Autowired
 	private InventoryService inventoryService;
-	
-	
-
-	
-
-//get all inventories working	
+		
+	//get all inventories working	
 	@GetMapping("/inventory")
 	public ResponseEntity<List<InventoryDto>> getAllInventory() {
 		try {
@@ -47,8 +43,7 @@ public class InventoryController {
 		}
 	}
 
-//Fetch productdata, storedata, orderstatus matching storied
-
+	//Fetch productdata, storedata, orderstatus matching storied
 	@GetMapping("/inventory/store/{storeId}")
 	public ResponseEntity<List<InventoryDetailStoreIdDto>> getInventoryByStoreId(@PathVariable Integer storeId) {
 	    try {
@@ -66,7 +61,6 @@ public class InventoryController {
 	
 	
 	//Fetch inventories and matching shipments 3rd end point
-
 	@GetMapping("/inventory/shipment")
 	public ResponseEntity<List<InventoryWithShipmentsDto>> getInventoryWithShipmentsByDeliveryAddress(@RequestParam String deliveryAddress) {
 	    try {
@@ -79,8 +73,8 @@ public class InventoryController {
 	    }
 	}
 
+	
 	//Fetch store, product and customer data matching order id 4th end point 
-
 	@GetMapping("/inventory/{orderId}")
 	public ResponseEntity<CustomInventoryDto> getInventoryByOrderId(@PathVariable Integer orderId) {
 	    try {

@@ -11,6 +11,7 @@ import com.orderinventory.entity.Products;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Products, Integer> {
+
 	public List<Products> findByProductNameContaining(String productName);
 
 	public List<Products> findTop10ByOrderByUnitPriceDesc();
@@ -18,8 +19,5 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	public List<Products> findByUnitPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 
 	public List<Products> findAll(Sort sort);
-	
-	
 
-//	public Optional<Products> findById(Products productId);
 }

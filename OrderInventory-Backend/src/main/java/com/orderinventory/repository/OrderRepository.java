@@ -14,7 +14,7 @@ import com.orderinventory.entity.Stores;
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
 
 	public List<Orders> findByOrderStatusContaining(String status);
-	
+
 	public List<Orders> findByStore(Stores store);
 
 	@Query("SELECT COUNT(CASE WHEN o.orderStatus = 'COMPLETE' THEN 1 END) AS completeCount, "
@@ -22,10 +22,5 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 	public List<Object[]> getOrderStatusCounts();
 
 	public List<Orders> findByCustomer(Customers customer);
-	
-//
-//	public Orders findByStoreIdAndProductId(Integer storeId, Products productId);
-//
-//	public Orders findByStoreIdAndProductId(Integer storeId, Integer productId);
 
 }
