@@ -18,7 +18,7 @@ import com.orderinventory.services.ProductServices;
 
 @Service
 public class ProductsServicesImpl implements ProductServices {
-
+	
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -31,7 +31,7 @@ public class ProductsServicesImpl implements ProductServices {
 	}
 
 	@Override
-	public List<ProductsDto> getAllProducts()throws ProductsNotFoundException{
+	public List<ProductsDto> getAllProducts() throws ProductsNotFoundException {
 		List<Products> pList = productRepository.findAll();
 		if (pList.isEmpty()) {
 			throw new ProductsNotFoundException("No products Available");
@@ -63,7 +63,7 @@ public class ProductsServicesImpl implements ProductServices {
 
 	@Override
 	public ProductsDto updateProduct(ProductsDto productDto) {
-		if(productRepository.existsById(productDto.getProductId())) {
+		if (!productRepository.existsById(productDto.getProductId())) {
 			throw new ProductsNotFoundException("No product found for this id");
 		}
 		Products products = new Products();
@@ -87,23 +87,11 @@ public class ProductsServicesImpl implements ProductServices {
 	}
 
 	@Override
-	public List<ProductsDto> findTopTenProductsByPrice() {
-		List<Products> findTopTen = productRepository.findTop10ByOrderByUnitPriceDesc();
-		List<ProductsDto> productsDtos = new ArrayList<>();
-		for (Products item : findTopTen) {
-			ProductsDto productsDto = new ProductsDto();
-			BeanUtils.copyProperties(item, productsDto);
-			productsDtos.add(productsDto);
-		}
-		return productsDtos;
-	}
-
-	@Override
 	public List<ProductsDto> findByUnitPriceBetween(double minPrice, double maxPrice) {
 		BigDecimal min = new BigDecimal(minPrice); // Noncompliant; see comment above
 		BigDecimal max = new BigDecimal(maxPrice); // Noncompliant; same result
 		List<Products> productsList = productRepository.findByUnitPriceBetween(min, max);
-		if(productsList.isEmpty()) {
+		if (productsList.isEmpty()) {
 			throw new ProductsNotFoundException("Products not find between this unit price range");
 		}
 		List<ProductsDto> dtos = new ArrayList<>();
@@ -114,7 +102,8 @@ public class ProductsServicesImpl implements ProductServices {
 		}
 		return dtos;
 	}
-
+	
+	
 	@Override
 	public List<ProductsDto> getSortedProducts(Sort sort) {
 		List<Products> sortedProducts = productRepository.findAll(sort);
@@ -123,6 +112,18 @@ public class ProductsServicesImpl implements ProductServices {
 		}
 		List<ProductsDto> productsDtos = new ArrayList<>();
 		for (Products item : sortedProducts) {
+			ProductsDto productsDto = new ProductsDto();
+			BeanUtils.copyProperties(item, productsDto);
+			productsDtos.add(productsDto);
+		}
+		return productsDtos;
+	}
+
+	@Override
+	public List<ProductsDto> findTopTenProductsByPrice() {
+		List<Products> findTopTen = productRepository.findTop10ByOrderByUnitPriceDesc();
+		List<ProductsDto> productsDtos = new ArrayList<>();
+		for (Products item : findTopTen) {
 			ProductsDto productsDto = new ProductsDto();
 			BeanUtils.copyProperties(item, productsDto);
 			productsDtos.add(productsDto);
