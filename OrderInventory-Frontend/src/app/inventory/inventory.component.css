@@ -1,0 +1,20 @@
+.shipment-details {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .shipment-item {
+    margin-right: 15px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+  }
+  
+  .shipment-label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .shipment-value {
+    margin-right: 10px;
+  }
+  

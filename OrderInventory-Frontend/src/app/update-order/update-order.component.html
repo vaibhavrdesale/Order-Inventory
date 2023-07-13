@@ -1,0 +1,92 @@
+<!-- <div class="container mt-4">
+    <h2 class="text-center">Update Order</h2>
+  
+    <div class="form-group">
+      <label for="orderId">Order ID:</label>
+      <input type="text" id="orderId" class="form-control" [(ngModel)]="order.orderId">
+    </div>
+  
+    <div class="form-group">
+      <label for="orderTms">Order Timestamp:</label>
+      <input type="text" id="orderTms" class="form-control" [(ngModel)]="order.orderTms">
+    </div>
+  
+    <div class="form-group">
+      <label for="customerId">Customer ID:</label>
+      <input type="text" id="customerId" class="form-control" [(ngModel)]="order.customerId">
+    </div>
+  
+    <div class="form-group">
+      <label for="orderStatus">Order Status:</label>
+      <select id="orderStatus" class="form-control" [(ngModel)]="order.orderStatus">
+        <option value="COMPLETE">COMPLETE</option>
+        <option value="CANCELLED">CANCELLED</option>
+      </select>
+    </div>
+  
+    <div class="form-group">
+      <label for="storeId">Store ID:</label>
+      <input type="text" id="storeId" class="form-control" [(ngModel)]="order.storeId">
+    </div>
+  
+    <button type="submit" class="btn btn-primary btn-block" (click)="updateOrder()">Update Order</button>
+  </div>
+   -->
+   <div class="container mt-4">
+  <h2 class="text-center">Update Order</h2>
+
+  <div class="form-group">
+    <label for="orderId">Order ID:</label>
+    <input type="text" id="orderId" class="form-control" [(ngModel)]="order.orderId">
+  </div>
+
+  <div class="form-group">
+    <label for="orderTms">Order Timestamp:</label>
+    <input type="text" id="orderTms" class="form-control" [(ngModel)]="order.orderTms">
+  </div>
+
+  <form #orderForm="ngForm" class="mt-4" (ngSubmit)="updateOrder()">
+    <div class="form-group">
+      <label for="customerId">Customer ID:</label>
+      <input type="text" id="customerId" class="form-control" [(ngModel)]="order.customerId" name="customerId" required
+        #customerId="ngModel">
+      <div *ngIf="customerId.invalid && (customerId.dirty || customerId.touched)" class="text-danger">
+        <div *ngIf="customerId.errors?.['required']">
+          Customer ID is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="orderStatus">Order Status:</label>
+      <select id="orderStatus" class="form-control" [(ngModel)]="order.orderStatus" name="orderStatus" required
+        #orderStatus="ngModel">
+        <option value="">-- Select Order Status --</option>
+        <option value="COMPLETE">COMPLETE</option>
+        <option value="CANCELLED">CANCELLED</option>
+      </select>
+      <div *ngIf="orderStatus.invalid && (orderStatus.dirty || orderStatus.touched)" class="text-danger">
+        <div *ngIf="orderStatus.errors?.['required']">
+          Order Status is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="storeId">Store ID:</label>
+      <input type="text" id="storeId" class="form-control" [(ngModel)]="order.storeId" name="storeId" required
+        #storeId="ngModel">
+      <div *ngIf="storeId.invalid && (storeId.dirty || storeId.touched)" class="text-danger">
+        <div *ngIf="storeId.errors?.['required']">
+          Store ID is required.
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" (click)="updateClicked = true">Update Order</button>
+
+    <div *ngIf="orderForm.invalid && updateClicked" class="alert alert-danger mt-2">
+      Please fill in all the required fields.
+    </div>
+  </form>
+</div>

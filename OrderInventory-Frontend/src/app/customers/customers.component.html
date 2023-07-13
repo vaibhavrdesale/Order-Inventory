@@ -1,0 +1,328 @@
+<div class="container math">
+  <div id="productlist">
+    <h3 class="text-center">Customers List</h3>
+    <div class="card">
+      <div class="card-header">
+        <h5>Find by:</h5>
+        <div class="row my-3">
+          <div class="col-md-4">
+            <select class="form-select" name="option" [(ngModel)]="option" (change)="searchByOption()">
+              <option value="1">Fetch all customers</option>
+              <option value="2">Add new Customer object in DB</option>
+              <option value="3">Update customer by object</option>
+              <option value="5">Search Customers Matching Email</option>
+              <option value="6">Shipment status wise count of customers</option>
+              <option value="7">Fetch orders for the respective customer by id</option>
+              <option value="8">Fetch shipment history for the respective customer by id</option>
+              <option value="9">Search Customers Matching name</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- this contains the all data opeartion -->
+        <div class="row my-3" *ngIf="option == 1">
+          <div class="container">
+            <div class="card shadow">
+              <div class="card-body">
+                <h3 class="card-title">All Customers</h3>
+
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Id</th>
+                      <th>Email Address</th>
+                      <th>Full Name</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let customer of pagedCustomers">
+                      <td>{{ customer.customerId}}</td>
+                      <td>{{ customer.emailAddress }}</td>
+                      <td>{{ customer.fullName }}</td>
+
+                    </tr>
+                  </tbody>
+                </table>
+                <button class="btn btn-dark" (click)="previousPage()"
+                  [class.disabled]="currentPage === 1">Previous</button>
+                <button class="btn btn-dark mx-2" (click)="nextPage()"
+                  [class.disabled]="currentPage === totalPages">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- this will be render you towards the add custmors -->
+        <div class="row my-3" *ngIf="option == 2">
+          <h3 class="text-center">Add Customer</h3>
+          <form [formGroup]="addCustomerForm" (ngSubmit)="addCustomer()">
+            <div class="mb-3">
+              <label for="emailAddress" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="emailAddress" formControlName="emailAddress"
+                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}">
+              <div
+                *ngIf="addCustomerForm.controls['emailAddress'].invalid && addCustomerForm.controls['emailAddress'].touched"
+                class="text-danger">
+                <div *ngIf="addCustomerForm.controls['emailAddress'].hasError('email')">
+                  Please enter a valid email address.
+                </div>
+                <div *ngIf="addCustomerForm.controls['emailAddress'].hasError('pattern')">
+                  Email address is not valid.
+                </div>
+                <div *ngIf="addCustomerForm.controls['emailAddress'].hasError('required')">
+                  Email address is required.
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullName" formControlName="fullName" pattern="[a-zA-Z\s]*"
+                (input)="validateInput('fullName')">
+              <div *ngIf="addCustomerForm.controls['fullName'].invalid && addCustomerForm.controls['fullName'].touched"
+                class="text-danger">
+                <div *ngIf="addCustomerForm.controls['fullName'].hasError('required')">
+                  Full name is required.
+                </div>
+                <div *ngIf="isNumeric('fullName') === true">
+                  Please enter value as characters.
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="addCustomerForm.invalid">Add Customer</button>
+          </form>
+        </div>
+
+
+
+        <!-- update customers  -->
+        <div class="row my-3" *ngIf="option == 3">
+          <div class="container">
+            <div class="card shadow">
+              <div class="card-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Customer ID</th>
+                      <th>Full Name</th>
+                      <th>Email Address</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let customer of pagedCustomers">
+                      <td>{{ customer.customerId }}</td>
+                      <td>
+                        <input type="text" [(ngModel)]="customer.fullName" name="fullName{{customer.customerId}}"
+                          id="fullName{{customer.customerId}}" class="form-control" />
+                      </td>
+                      <td>
+                        <input type="email" [(ngModel)]="customer.emailAddress"
+                          name="emailAddress{{customer.customerId}}" id="emailAddress{{customer.customerId}}"
+                          class="form-control" />
+                      </td>
+                      <td>
+                        <button class="btn btn-primary" (click)="updateCustomer(customer)">Update</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button class="btn btn-dark" (click)="previousPage()"
+                  [class.disabled]="currentPage === 1">Previous</button>
+                <button class="btn btn-dark mx-2" (click)="nextPage()"
+                  [class.disabled]="currentPage === totalPages">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- search by eamail and fulname -->
+
+        <div class="row my-3" *ngIf="option == 5">
+
+          <!-- Search Form -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <input type="text" class="form-control" [(ngModel)]="searchEmail" placeholder="Search by Email" />
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <button class="btn btn-primary" (click)="searchCustomers()">Search</button>
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+          <div *ngIf="pagedCustomers.length > 0">
+            <div class="card-body">
+              <h3 class="card-title">Searched Customers</h3>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Email Address</th>
+                    <th>Full Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let customer of pagedCustomers">
+                    <td>{{ customer.emailAddress }}</td>
+                    <td>{{ customer.fullName }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button class="btn btn-dark" (click)="previousPage() "
+              [class.disabled]="currentPage === 1">Previous</button>
+            <button class="btn btn-dark mx-2" (click)="nextPage()"
+              [class.disabled]="currentPage === totalPages">Next</button>
+
+            <!-- No Customers Found Message -->
+            <div class="alert alert-info" *ngIf="pagedCustomers.length === 0 && !errorMessage">
+              No customers found.
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+        <div class="row my-3" *ngIf="option == 6">
+          <div>
+            <label for="shipmentStatus">Shipment Status:</label>
+            <input type="text" [(ngModel)]="shipmentStatus" id="shipmentStatus"
+              [ngClass]="{'is-invalid': shipmentStatusInvalid}">
+            <div *ngIf="shipmentStatusInvalid" class="text-danger">Please enter a valid shipment
+              status(Ex:-DELIVERED,SHIPPED,IN-TRANSIT,CREATED).</div>
+            <button (click)="getCustomerCount()">Get Count</button>
+          </div>
+
+          <div *ngIf="countDto">
+            <h3>Count: {{ countDto.countCustomer }}</h3>
+            <h4>Shipment Status: {{ countDto.shipmentStatus }}</h4>
+          </div>
+        </div>
+
+
+
+
+
+
+        <div class="row my-3" *ngIf="option == 8">
+          <div>
+            <label for="customerId">Customer ID:</label>
+            <input type="number" id="customerId" [(ngModel)]="customerId" required>
+            <button (click)="getShipmentStatus()">Get Shipment Status</button>
+            <div *ngIf="!isCustomerIdValid()" class="text-danger">Please enter a valid customer ID.</div>
+          </div>
+
+          <table *ngIf="shipmentStatusList.length > 0">
+            <thead>
+              <tr>
+                <th>Shipment ID</th>
+                <th>Store ID</th>
+                <th>Customer ID</th>
+                <th>Delivery Address</th>
+                <th>Shipment Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let shipment of shipmentStatusList">
+                <td>{{ shipment.shipmentId }}</td>
+                <td>{{ shipment.storeId }}</td>
+                <td>{{ shipment.customerId }}</td>
+                <td>{{ shipment.deliveryAddress }}</td>
+                <td>{{ shipment.shipmentStatus }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        >
+
+
+        <!-- get orders by customrer id  -->
+        <div class="row my-3" *ngIf="option == 7">
+          <h2>Customer List</h2>
+
+          <div>
+            <label for="customerId">Enter Customer ID:</label>
+            <input type="number" id="customerId" [(ngModel)]="customerId" required>
+            <div *ngIf="!isCustomerIdValid()" class="text-danger">Please enter a valid customer ID.</div>
+            <button (click)="getOrdersByCustomerId()">Get Orders</button>
+          </div>
+
+          <h2>Order List</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Customer ID</th>
+                <th>Order Status</th>
+                <th>Store ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of ordersone">
+                <td>{{ order.orderId }}</td>
+                <td>{{ order.orderTms }}</td>
+                <td>{{ order.customerId }}</td>
+                <td>{{ order.orderStatus }}</td>
+                <td>{{ order.storeId }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+        <div class="row my-3" *ngIf="option == 9">
+          <div *ngIf="pagedCustomers.length > 0">
+            <div class="card-body">
+              <div>
+                <input [(ngModel)]="fullName" placeholder="Enter full name" required pattern="[a-zA-Z\s]*">
+                <button (click)="searchCustomersByFullName()">Search</button>
+                <div *ngIf="!isFullNameValid()" class="text-danger">
+                  <div *ngIf="isNumerice(fullName)">
+                    Please enter a valid full name.
+                  </div>
+                  <div *ngIf="fullNameInvalid">
+                    Full name is required.
+                  </div>
+                </div>
+              </div>
+        
+              <table *ngIf="customers">
+                <thead>
+                  <tr>
+                    <th>Customer ID</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let customer of customers">
+                    <td>{{ customer.customerId }}</td>
+                    <td>{{ customer.fullName }}</td>
+                    <td>{{ customer.emailAddress }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+
+
+
+
+
+      </div>
+    </div>
+  </div>
