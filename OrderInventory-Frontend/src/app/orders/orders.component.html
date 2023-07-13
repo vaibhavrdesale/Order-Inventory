@@ -3,7 +3,6 @@
 
 <head>
     <title>Order List</title>
-    <!-- <link rel="stylesheet" href=https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css> -->
 </head>
 
 <body>
@@ -14,12 +13,11 @@
                 <h5>Find by :</h5>
                 <div class="row my-3">
                     <div class="col-md-2">
-                        <select class="form-select" name="option" [(ngModel)]="option">
-                            <option selected>select</option>
-                            <option value="1">Add order</option>
-                            <option value="2">Order Status</option>
-                            <option value="3">Store name</option>
-                            <option value="4">Get All</option>
+                        <select class="form-select" name="option" [(ngModel)]="option" (change)="selectOption()">
+                            <option value="1">Add Order</option>
+                            <option value="2">Get by Order Status</option>
+                            <option value="3">Get by store name</option>
+                            <option value="4">Get all Orders</option>
                         </select>
                     </div>
                     <div class="col-md-3">

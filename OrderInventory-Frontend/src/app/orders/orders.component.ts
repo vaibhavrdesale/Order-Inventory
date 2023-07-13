@@ -29,7 +29,7 @@ export class OrdersComponent {
   constructor(private ordersService: OrdersService) { }
 
   ngOnInit() {
-    this.getAllOrders();
+    // this.getAllOrders();
   }
 
   getAllOrders = () => {
@@ -48,9 +48,10 @@ export class OrdersComponent {
       }
     );
   }
-  
+
 
   search = () => {
+
     if (this.inputData == "") {
       this.getAllOrders();
     } else {
@@ -67,27 +68,37 @@ export class OrdersComponent {
               const errMsg = error.error.errorMessage || 'Failed to retrieve orders by status. Please try again.';
               console.error('Error retrieving orders by status:', errMsg);
               alert(errMsg);
-              
+
             }
           );
           break;
-          case 3:
-            this.ordersService.findByStoreName(this.inputData).subscribe(
-              (response: any) => {
-                this.orders = [...response];
-                this.totalOrders = this.orders.length;
-                this.totalPages = Math.ceil(this.totalOrders / this.pageSize);
-                this.goToPage(this.currentPage);
-              },
-              (error: HttpErrorResponse) => {
-                const errMsg = error.error.errorMessage || 'Failed to retrieve orders by store name. Please try again.';
-                console.error('Error retrieving orders by store name:', errMsg);
-                alert(errMsg);
-              }
-            );
-            break;
-          }
+        case 3:
+          this.ordersService.findByStoreName(this.inputData).subscribe(
+            (response: any) => {
+              this.orders = [...response];
+              this.totalOrders = this.orders.length;
+              this.totalPages = Math.ceil(this.totalOrders / this.pageSize);
+              this.goToPage(this.currentPage);
+            },
+            (error: HttpErrorResponse) => {
+              const errMsg = error.error.errorMessage || 'Failed to retrieve orders by store name. Please try again.';
+              console.error('Error retrieving orders by store name:', errMsg);
+              alert(errMsg);
+            }
+          );
+          break;
+          case 4: this.getAllOrders()
+          break;
+          default: alert("please select only from this options")
+          break;
+      }
     }
+  }
+
+  selectOption():void{
+      if (this.option == 4) {
+        this.getAllOrders()
+      }
   }
 
   getStatusCount = () => {
@@ -99,11 +110,11 @@ export class OrdersComponent {
         const errMsg = error.error.errorMessage || 'Failed to retrieve status count. Please try again.';
         console.error('Error retrieving status count:', errMsg);
         alert(errMsg);
-        
+
       }
     );
   }
-  
+
 
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
@@ -111,7 +122,7 @@ export class OrdersComponent {
       const startIndex = (page - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;
       this.pagedOrders = this.orders.slice(startIndex, endIndex);
-  
+
       this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
     }
   }
