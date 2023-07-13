@@ -29,7 +29,7 @@ export class OrdersComponent {
   constructor(private ordersService: OrdersService) { }
 
   ngOnInit() {
-    // this.getAllOrders();
+  
   }
 
   getAllOrders = () => {
