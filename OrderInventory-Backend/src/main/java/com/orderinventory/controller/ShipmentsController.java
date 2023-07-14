@@ -26,12 +26,14 @@ public class ShipmentsController {
 	@Autowired
 	private ShipmentsServices shipmentService;
 
+	//Save Shipments
 	@PostMapping("/add")
 	public ResponseEntity<String> saveShipments(@RequestBody ShipmentsDto shipmentsDto) {
 		String saveShipments = shipmentService.saveShipments(shipmentsDto);
 		return new ResponseEntity<String>(saveShipments, HttpStatus.OK);
 	}
 	
+	//Get Shipments for matching customerId
 	@GetMapping("/customers/{customerId}")
 	public ResponseEntity<List<ShipmentsDto>> getShipmentByCustomer(@PathVariable Integer customerId){
 		Customers customer = new Customers(customerId);
@@ -39,6 +41,7 @@ public class ShipmentsController {
 		return new ResponseEntity<List<ShipmentsDto>>(shipmentsByCustomerId,HttpStatus.OK);
 	}
 
+	//Get Top ten most shipped customers
 	@GetMapping("/toptencustomers")
 	public ResponseEntity<List<CustomDto>> getTopTenMostShippedCustomers(){
 		List<CustomDto> customersDtos= shipmentService.getTopTenMostShippedCustomers();
@@ -47,6 +50,7 @@ public class ShipmentsController {
 		
 	}
 	
+	//Get Shipment By storeId
 	@GetMapping("/shipment/stores/{storeId}")
 	public ResponseEntity<List<ShipmentsDto>> getShipmentsByStoreId(@PathVariable Integer storeId){
 		Stores store=new Stores(storeId);

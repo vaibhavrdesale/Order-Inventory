@@ -30,13 +30,14 @@ public class CustomersController {
 
 	@Autowired
 	private CustomersServices customerServices;
-	
+	//Get Customers By fullName
 	@GetMapping("/customers/name/{fullName}")
 	public ResponseEntity<List<CustomersDto>> getCustomersByFullName(@PathVariable String fullName) {
 		List<CustomersDto> customerDtos = customerServices.getCustomersByFullName(fullName);
 		return new ResponseEntity<List<CustomersDto>>(customerDtos, HttpStatus.OK);
 	}
 
+	//Get Customers By EmailAddress
 	@GetMapping("/customers/email-{emailAddress}")
 	public ResponseEntity<List<CustomersDto>> getCustomersByEmail(@PathVariable String emailAddress) {
 		List<CustomersDto> cusDto = customerServices.getCustomersByEmail(emailAddress);
@@ -44,6 +45,7 @@ public class CustomersController {
 		return new ResponseEntity<List<CustomersDto>> (cusDto, HttpStatus.OK);
 	}
 
+	//Save Customer
 	@PostMapping("/customers")
 	public ResponseEntity<ResponseDto> saveCustomers(@Valid @RequestBody CustomersDto customersDto) {
 		ResponseDto saveCustomers = customerServices.saveCustomers(customersDto);
@@ -51,6 +53,7 @@ public class CustomersController {
 
 	}
 	
+	//Update Customer
 	@PutMapping("/customers")
 	public ResponseEntity<ResponseDto> updateCustomer(@Valid @RequestBody CustomersDto customersDto){
 		    ResponseDto updateCustomer = customerServices.updateCustomer(customersDto);
@@ -58,7 +61,7 @@ public class CustomersController {
 		return new ResponseEntity<ResponseDto>(updateCustomer,HttpStatus.OK);
 		
 	}
-	
+	//Get All Customers
 	@GetMapping("/customers")
 	public ResponseEntity<List<CustomersDto>> getAllCustomers(){
 		List<CustomersDto> custDtoList = customerServices.getAllCustomers();
@@ -67,6 +70,7 @@ public class CustomersController {
 		
 	}
 	
+	//Get CustomerCount  as per ShipmentStatus
 	@GetMapping("/customers/shipment/{shipmentStatus}")
 	public ResponseEntity<CountDto> getCustomerCountByShipmentStatus(@PathVariable String shipmentStatus){
 		CountDto countDto = customerServices.getCustomerCountByShipmentStatus(shipmentStatus);
@@ -74,13 +78,14 @@ public class CustomersController {
 		
 	}
 	
-	
+	//Get Shipment for matching customerId
 	@GetMapping("customerss/{customerId}")
 	public ResponseEntity<List<ShipmentCustomDto>> getShipmentsByCustomerId(@PathVariable Integer customerId){
 		List<ShipmentCustomDto> shimentCustomDtos = customerServices.getShipmentsByCustomerId(customerId);
 		return new ResponseEntity<List<ShipmentCustomDto>>(shimentCustomDtos,HttpStatus.OK);
 	}
 	
+	//Get Orders for matching customerId
 	@GetMapping("customers/{custId}/order")
 	public ResponseEntity<List<OrderDto>> getOrdersBycustomerId(@PathVariable Integer custId){
 		               List<OrderDto> orderDtos= customerServices.getOrdersByCustomerId(custId);
