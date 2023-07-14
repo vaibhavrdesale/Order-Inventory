@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.orderinventory.dto.ProductDto;
 import com.orderinventory.dto.ProductsDto;
 import com.orderinventory.services.ProductServices;
 
@@ -30,36 +29,35 @@ public class ProductsController {
 	@Autowired
 	private ProductServices productServices;
 
+	// Save a new product
 	@PostMapping("/products")
 	public ResponseEntity<ProductsDto> saveProduct(@Valid @RequestBody ProductsDto productsDto) {
-		ProductsDto saveProduct = productServices.saveProduct(productsDto);
-		return new ResponseEntity<ProductsDto>(productsDto,HttpStatus.OK);
+		ProductsDto savedProduct = productServices.saveProduct(productsDto);
+		return new ResponseEntity<ProductsDto>(savedProduct, HttpStatus.OK);
 	}
 
+	// Get all products
 	@GetMapping("/products")
 	public ResponseEntity<List<ProductsDto>> getAllProducts() {
 		List<ProductsDto> productsDtos = productServices.getAllProducts();
 		return new ResponseEntity<List<ProductsDto>>(productsDtos, HttpStatus.OK);
 	}
 
+	// Get a product by product ID
 	@GetMapping("/products/{productId}")
 	public ResponseEntity<ProductsDto> getProductById(@PathVariable Integer productId) {
 		ProductsDto productsDto = productServices.getProductById(productId);
 		return new ResponseEntity<ProductsDto>(productsDto, HttpStatus.OK);
 	}
 
+	// Get products by product Name
 	@GetMapping("/productname/{productName}")
 	public ResponseEntity<List<ProductsDto>> getProductsByName(@PathVariable String productName) {
 		List<ProductsDto> productsDtos = productServices.getProductsByName(productName);
 		return new ResponseEntity<List<ProductsDto>>(productsDtos, HttpStatus.OK);
 	}
 
-	@GetMapping("/products/findtoptenproductsonprice")
-	public ResponseEntity<List<ProductsDto>> findTopTenProductsByPrice() {
-		List<ProductsDto> productsDtos = productServices.findTopTenProductsByPrice();
-		return new ResponseEntity<List<ProductsDto>>(productsDtos, HttpStatus.OK);
-	}
-
+	// Get products within a specified price range
 	@GetMapping("/products/unitprice")
 	public ResponseEntity<List<ProductsDto>> findByUnitPriceBetween(@RequestParam("min") double minPrice,
 			@RequestParam("max") double maxPrice) {
@@ -67,12 +65,14 @@ public class ProductsController {
 		return new ResponseEntity<List<ProductsDto>>(productsDtos, HttpStatus.OK);
 	}
 
+	// Update a product
 	@PutMapping("/products")
 	public ResponseEntity<ProductsDto> updateProduct(@Valid @RequestBody ProductsDto productsDto) {
 		ProductsDto updateProduct = productServices.updateProduct(productsDto);
 		return new ResponseEntity<ProductsDto>(updateProduct, HttpStatus.OK);
 	}
 
+	// Get sorted products based on a field
 	@GetMapping("/products/sort")
 	public ResponseEntity<List<ProductsDto>> getSortedProducts(@RequestParam("field") String field) {
 		Sort sort = Sort.by(field);
@@ -80,4 +80,10 @@ public class ProductsController {
 		return new ResponseEntity<List<ProductsDto>>(sortedProducts, HttpStatus.OK);
 	}
 
+	// Get top ten products by price
+	@GetMapping("/products/findtoptenproductsonprice")
+	public ResponseEntity<List<ProductsDto>> findTopTenProductsByPrice() {
+		List<ProductsDto> productsDtos = productServices.findTopTenProductsByPrice();
+		return new ResponseEntity<List<ProductsDto>>(productsDtos, HttpStatus.OK);
+	}
 }
