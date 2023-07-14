@@ -1,125 +1,22 @@
+<!-- <div class="container math"> -->
 <div class="container mt-5">
-
   <h2 class="text-center">Store List</h2>
-
   <div class="card">
-
     <div class="card-header">
-
       <h5 class="mb-4">Find by:</h5>
-
       <div class="row mb-3">
-
         <div class="col-md-4">
-
           <select class="form-select" name="option" [(ngModel)]="option" (change)="searchByOption()">
-
-            <option value="1">Fetch all Stores</option>
-
-            <option value="2">Add new Store object to DB</option>
-
+            <option value="1">Get all Stores</option>
+            <option value="2">Add new Store</option>
             <option value="3">Assign webAddress to a Store</option>
-
             <option value="4">Search Stores by storeid</option>
-            <option value="5">get inventories and products by storeid</option>
-
+            <option value="5">Get inventories and products by storeid</option>
           </select>
-
         </div>
-
       </div>
 
-
-
-
-      <!-- Fetch all Stores -->
-      <!-- 
-            <div class="row my-4" *ngIf="option == 1">
-
-                <div class="container">
-
-                    <div class="card shadow">
-
-                        <div class="card-body">
-
-                            <h3 class="card-title">All Stores</h3>
-                            <div class="table-responsive">
-
-                                <table class="table table-striped">
-
-                                    <thead>
-
-                                        <tr>
-
-                                            <th>Store ID</th>
-
-                                            <th>Store Name</th>
-
-                                            <th>Web Address</th>
-
-                                            <th>Physical Address</th>
-
-                                            <th>Latitude</th>
-
-                                            <th>Longitude</th>
-
-                                            <th>Logo</th>
-
-                                            <th>Logo Mime Type</th>
-
-                                            <th>Logo File name</th>
-
-                                            <th>Logo Charset</th>
-
-                                            <th>Logo Last Updated</th>
-
-                                        </tr>
-
-                                    </thead>
-
-                                    <tbody>
-
-                                        <tr *ngFor="let item of stores">
-
-                                            <td>{{ item.storeId }}</td>
-
-                                            <td>{{ item.storeName }}</td>
-
-                                            <td>{{ item.webAddress }}</td>
-
-                                            <td>{{ item.physicalAddress }}</td>
-
-                                            <td>{{ item.latitude }}</td>
-
-                                            <td>{{ item.longitude }}</td>
-
-                                            <td>{{ item.logo }}</td>
-
-                                            <td>{{ item.logoMimeType }}</td>
-
-                                            <td>{{ item.logoFilename }}</td>
-
-                                            <td>{{ item.logoCharset }}</td>
-
-                                            <td>{{ item.logoLastUpdated }}</td>
-
-                                         
-
-                                        </tr>
-
-                                    </tbody>
-
-                                </table>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div> -->
+<!-- ------------------fetch all store--------------------------- -->
 
       <div class="row my-4" *ngIf="option == 1">
         <div class="container">
@@ -184,14 +81,6 @@
         </div>
       </div>
 
-
-
-
-
-
-
-
-
       <!-- Add new Store -->
       <div class="row my-4" *ngIf="option == 2">
         <div class="container small-form">
@@ -199,7 +88,7 @@
           <form [formGroup]="addStoreForm" (ngSubmit)="addStore()">
             <div class="mb-3">
               <label for="storeName" class="form-label">Store Name</label>
-              <input type="text" class="form-control" id="storeName" formControlName="storeName" required>
+              <input type="text" placeholder="Ex:Redmi" class="form-control" id="storeName" formControlName="storeName" required >
               <div *ngIf="addStoreForm?.get('storeName')?.invalid && addStoreForm?.get('storeName')?.touched"
                 class="text-danger">
                 Store Name is required.
@@ -207,7 +96,7 @@
             </div>
             <div class="mb-3">
               <label for="webAddress" class="form-label">Web Address</label>
-              <input type="text" class="form-control" id="webAddress" formControlName="webAddress" required>
+              <input type="text" placeholder="www.example.com" class="form-control" id="webAddress" formControlName="webAddress" required>
               <div *ngIf="addStoreForm?.get('webAddress')?.invalid && addStoreForm?.get('webAddress')?.touched"
                 class="text-danger">
                 Web Address is required.
@@ -215,7 +104,7 @@
             </div>
             <div class="mb-3">
               <label for="physicalAddress" class="form-label">Physical Address</label>
-              <input type="text" class="form-control" id="physicalAddress" formControlName="physicalAddress" required>
+              <input type="text" placeholder="ex:pune" class="form-control" id="physicalAddress" formControlName="physicalAddress" required>
               <div
                 *ngIf="addStoreForm?.get('physicalAddress')?.invalid && addStoreForm?.get('physicalAddress')?.touched"
                 class="text-danger">
@@ -224,7 +113,7 @@
             </div>
             <div class="mb-3">
               <label for="latitude" class="form-label">Latitude</label>
-              <input type="number" class="form-control" id="latitude" formControlName="latitude" required>
+              <input type="number" placeholder="ex:11.00" class="form-control" id="latitude" formControlName="latitude" required>
               <div *ngIf="addStoreForm?.get('latitude')?.invalid && addStoreForm?.get('latitude')?.touched"
                 class="text-danger">
                 Latitude is required.
@@ -232,7 +121,7 @@
             </div>
             <div class="mb-3">
               <label for="longitude" class="form-label">Longitude</label>
-              <input type="number" class="form-control" id="longitude" formControlName="longitude" required>
+              <input type="number" placeholder="Ex:12.00" class="form-control" id="longitude" formControlName="longitude" required>
               <div *ngIf="addStoreForm?.get('longitude')?.invalid && addStoreForm?.get('longitude')?.touched"
                 class="text-danger">
                 Longitude is required.
@@ -240,14 +129,14 @@
             </div>
             <div class="mb-3">
               <label for="logo" class="form-label">Logo</label>
-              <input type="text" class="form-control" id="logo" formControlName="logo" required>
+              <input type="text" placeholder="example" class="form-control" id="logo" formControlName="logo" required>
               <div *ngIf="addStoreForm?.get('logo')?.invalid && addStoreForm?.get('logo')?.touched" class="text-danger">
                 Logo is required.
               </div>
             </div>
             <div class="mb-3">
               <label for="logoMimeType" class="form-label">Logo Mime Type</label>
-              <input type="text" class="form-control" id="logoMimeType" formControlName="logoMimeType" required>
+              <input type="text" placeholder="Ex:jpeg" class="form-control" id="logoMimeType" formControlName="logoMimeType" required>
               <div *ngIf="addStoreForm?.get('logoMimeType')?.invalid && addStoreForm?.get('logoMimeType')?.touched"
                 class="text-danger">
                 Logo Mime Type is required.
@@ -255,7 +144,7 @@
             </div>
             <div class="mb-3">
               <label for="logoFilename" class="form-label">Logo Filename</label>
-              <input type="text" class="form-control" id="logoFilename" formControlName="logoFilename" required>
+              <input type="text" placeholder="Ex:redmi" class="form-control" id="logoFilename" formControlName="logoFilename" required>
               <div *ngIf="addStoreForm?.get('logoFilename')?.invalid && addStoreForm?.get('logoFilename')?.touched"
                 class="text-danger">
                 Logo Filename is required.
@@ -263,7 +152,7 @@
             </div>
             <div class="mb-3">
               <label for="logoCharset" class="form-label">Logo Charset</label>
-              <input type="text" class="form-control" id="logoCharset" formControlName="logoCharset" required>
+              <input type="text" placeholder="Ex:utf-8" class="form-control" id="logoCharset" formControlName="logoCharset" required>
               <div *ngIf="addStoreForm?.get('logoCharset')?.invalid && addStoreForm?.get('logoCharset')?.touched"
                 class="text-danger">
                 Logo Charset is required.
@@ -271,7 +160,7 @@
             </div>
             <div class="mb-3">
               <label for="logoLastUpdated" class="form-label">Logo Last Updated</label>
-              <input type="text" class="form-control" id="logoLastUpdated" formControlName="logoLastUpdated" required>
+              <input type="text" placeholder="Ex:yyyy-dd-MM" class="form-control" id="logoLastUpdated" formControlName="logoLastUpdated" required>
               <div
                 *ngIf="addStoreForm?.get('logoLastUpdated')?.invalid && addStoreForm?.get('logoLastUpdated')?.touched"
                 class="text-danger">
@@ -284,18 +173,17 @@
       </div>
 
 
-
-
       <!-- update store id -->
       <div *ngIf="option == 3">
         <label for="storeId">Store ID:</label>
-        <input type="number" id="storeId" [(ngModel)]="storeId">
-
+        <input type="number" id="storeId" [(ngModel)]="storeId" required>
+      
         <label for="webAddress">Web Address:</label>
-        <input type="text" id="webAddress" [(ngModel)]="webAddress">
-
-        <button (click)="updateWebAddress()">Update Web Address</button>
+        <input type="text" id="webAddress" [(ngModel)]="webAddress" required>
+      
+        <button (click)="updateWebAddress()" [disabled]="!storeId || !webAddress">Update Web Address</button>
       </div>
+      
 
 
 
@@ -309,8 +197,8 @@
 
       <div *ngIf="Store">
         <h2>Store Details</h2>
-        <table class="table table-striped table-bordered">
-          <thead>
+        <table class="table table-bordered">
+          <thead class="table-success">
             <tr>
               <th>ID</th>
               <th>Name</th>
@@ -344,88 +232,44 @@
       </div>
 
 
-
-
-
- 
-
- 
-
 <div class="container" *ngIf="option==5">
 
               <h1>Inventory List</h1>
 
-             
-
               <div class="form-group">
-
                 <label for="storeIdInput">Enter Store ID:</label>
-
                 <input type="number" class="form-control " id="storeIdInput" [(ngModel)]="storeId" name="storeId">
-
                 <button class="btn btn-primary my-3" (click)="getInventoryByStoreId()">Fetch Inventory</button>
-
               </div>
 
-             
-
-              <table class="table">
-
+              <table class="table table-bordered">
                 <thead class="table-success">
-
                   <tr>
-
                     <th>Inventory ID</th>
-
                     <th>Product ID</th>
-
                     <th>Product Name</th>
-
                     <th>Unit Price</th>
-
                     <th>Product Details</th>
-
                   </tr>
-
                 </thead>
-
                 <tbody>
-
                   <tr *ngFor="let inventory of inventories">
-
                     <td>{{ inventory.inventoryId }}</td>
-
                     <td>{{ inventory.productId }}</td>
-
                     <td>{{ inventory.productName }}</td>
-
                     <td>{{ inventory.unitPrice | currency: 'INR' }}</td>
-
                     <td class="product-details-cell">{{ inventory.productDetails }}</td>
-
                   </tr>
-
                 </tbody>
-
               </table>
-
               <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-
             </div>
-
-
-
     </div>
 
   </div>
 
 
   <!-- pagination codes -->
-
-
-
-
-
 
 
 </div>

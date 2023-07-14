@@ -7,29 +7,23 @@
         <div class="row my-3">
           <div class="col-md-4">
             <select class="form-select" name="option" [(ngModel)]="option" (change)="searchByOption()">
-              <option value="6">Fetch All Products</option>
-              <option value="1">Add New Product Object In DB</option>
-              <option value="2">Update Products By Object</option>
-              <option value="3">Search Products Matching product name</option>
-              <option value="4">
-                Fetch List of Products Matching Between Min and Max unit price
-              </option>
-              <option value="5">
-                Get sorting List Of Products
-              </option>
+              <option value="6">Get All Products</option>
+              <option value="1">Add New Product</option>
+              <option value="2">Update Product</option>
+              <option value="3">Search Products By product name</option>
+              <option value="4">Get List of Products Between Min and Max price</option>
+              <option value="5">Get sorted List Of Products by fields</option>
             </select>
           </div>
           <div class="col-md-2">
-            <input type="text" placeholder="input" class="form-control" (keyup)="searchByProdName()" name="productName"
-              [(ngModel)]="productName" />
+            <input type="text" placeholder="Search by product name" class="form-control" (keyup)="searchByProdName()"
+              name="productName" [(ngModel)]="productName" />
           </div>
         </div>
       </div>
     </div>
 
-
-    <!-- this section contains the add product method -->
-    <!-- add-product.component.html -->
+    <!-- Add new product form -->
     <div class="row my-3" *ngIf="option == 1">
       <form [formGroup]="productForm" (ngSubmit)="saveProduct()" class="text-left small-form">
         <div class="mb-3">
@@ -41,7 +35,7 @@
             Product Name is required.
           </div>
           <div *ngIf="isInputInvalid('productName')" class="text-danger">
-            Please enter value as character.
+            Please enter a value as characters.
           </div>
         </div>
         <div class="mb-3">
@@ -56,7 +50,7 @@
             Unit Price is required.
           </div>
           <div *ngIf="isInputInvalid('unitPrice')" class="text-danger">
-            Please enter a value as number.
+            Please enter a value as a number.
           </div>
         </div>
         <div class="mb-3">
@@ -66,10 +60,8 @@
         <button type="submit" [disabled]="!productForm.valid" class="btn btn-primary">Save</button>
       </form>
     </div>
-    
 
-
-    <!-- serch product by productname -->
+    <!-- Search product by product name -->
     <div class="row my-3" *ngIf="option == 3">
       <div class="input-group mb-3"></div>
       <table class="table table-bordered">
@@ -85,16 +77,14 @@
           <tr *ngFor="let item of productsList">
             <td>{{ item.productId }}</td>
             <td>{{ item.productName }}</td>
-            <td>
-              {{ item.unitPrice | currency : "INR" : "symbol" : "1.2-2" }}
-            </td>
+            <td>{{ item.unitPrice | currency : "INR" : "symbol" : "1.2-2" }}</td>
             <td>{{ item.productDetails }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- this section conatins Fetch List of Products matching between min and max unit price -->
+    <!-- Fetch List of Products matching between min and max unit price -->
     <div class="row my-3" *ngIf="option == 4">
       <h5>Fetch List of Products matching between min and max unit price</h5>
       <div class="col-md-4">
@@ -104,9 +94,7 @@
         <input type="number" placeholder="Maximum Unit Price" class="form-control" [(ngModel)]="maxUnitPrice" />
       </div>
       <div class="col-md-4 my-2">
-        <button type="button" class="btn btn-outline-dark" (click)="searchByPriceRange()">
-          Search
-        </button>
+        <button type="button" class="btn btn-outline-dark" (click)="searchByPriceRange()">Search</button>
       </div>
       <table class="table table-bordered">
         <thead class="thead-dark">
@@ -121,38 +109,57 @@
           <tr *ngFor="let item of productsListByPrice">
             <td>{{ item.productId }}</td>
             <td>{{ item.productName }}</td>
-            <td>
-              {{ item.unitPrice | currency : "INR" : "symbol" : "1.2-2" }}
-            </td>
-            <td>{{ item.productDetails | slice : 1 : 49 }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="row my-3" *ngIf="option == 6">
-      <table class="table table-bordered">
-        <thead class="thead-dark">
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of productsList">
-            <td>{{ item.productId }}</td>
-            <td>{{ item.productName }}</td>
-            <td>
-              {{ item.unitPrice | currency : "INR" : "symbol" : "1.2-2" }}
-            </td>
+            <td>{{ item.unitPrice | currency : "INR" : "symbol" : "1.2-2" }}</td>
             <td>{{ item.productDetails | slice : 1 : 49 }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- this secrtion conytains update product -->
+    <!-- Fetch all products -->
+    <div class="row my-3" *ngIf="option == 6">
+  <table class="table table-bordered">
+    <thead class="table-success">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of pagedProducts">
+        <td>{{ item.productId }}</td>
+        <td>{{ item.productName }}</td>
+        <td>{{ item.unitPrice | currency : "INR" : "symbol" : "1.2-2" }}</td>
+        <td>{{ item.productDetails | slice : 1 : 49 }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <nav aria-label="Page navigation" class="pagination-container">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="firstPage()">First</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="previousPage()">Previous</a>
+      </li>
+      <li class="page-item" *ngFor="let page of visiblePages" [class.active]="currentPage === page">
+        <a class="page-link pagination-link" (click)="goToPage(page)">{{ page }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="nextPage()">Next</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="lastPage()">Last</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+
+    <!-- Update product form -->
     <div class="row my-3" *ngIf="option == 2">
       <form [formGroup]="productForm" (ngSubmit)="updateProduct()" class="text-center">
         <div class="form-group row">
@@ -168,7 +175,7 @@
             </div>
           </div>
         </div>
-    
+
         <div class="form-group row">
           <label class="col-sm-3 col-form-label font-weight-bold bg-light p-2 text-left">Product Name:</label>
           <div class="col-sm-9">
@@ -182,7 +189,7 @@
             </div>
           </div>
         </div>
-    
+
         <div class="form-group row">
           <label class="col-sm-3 col-form-label font-weight-bold bg-light p-2 text-left">Unit Price:</label>
           <div class="col-sm-9">
@@ -196,7 +203,7 @@
             </div>
           </div>
         </div>
-    
+
         <div class="form-group row">
           <label class="col-sm-3 col-form-label font-weight-bold bg-light p-2 text-left">Product Details:</label>
           <div class="col-sm-9">
@@ -207,13 +214,14 @@
             </div>
           </div>
         </div>
-    
+
         <button type="submit" [disabled]="productForm.invalid" class="btn btn-secondary btn-light">Update Product</button>
       </form>
     </div>
-        <!-- this section contains the Get sorting list of the products-->
+
+    <!-- Get sorting list of the products -->
     <div class="row my-3" *ngIf="option == 5">
-      <h1 class="text-info">Get sorting List Of Products</h1>
+      <h1 class="text-info">Get Sorting List of Products</h1>
 
       <table class="table table-bordered">
         <thead class="thead-dark">
@@ -222,18 +230,17 @@
             <th scope="col"><button class="btn btn-success" (click)="sort('productName')">Product Name</button></th>
             <th scope="col"><button class="btn btn-success" (click)="sort('unitPrice')">Unit Price</button></th>
             <th scope="col"><button class="btn btn-success" (click)="sort('productDetails')">Product Details</button></th>
-          </tr>                    
+          </tr>
         </thead>
         <tbody>
           <tr *ngFor="let product of sortlist">
             <td>{{ product.productId }}</td>
             <td>{{ product.productName }}</td>
-            <td>{{ product.unitPrice }}</td>
-            <td>{{ product.productDetails }}</td>
+            <td>{{ product.unitPrice | currency : "INR" : "symbol" : "1.2-2" }}</td>
+            <td>{{ product.productDetails | slice : 1 : 49 }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    
   </div>
 </div>

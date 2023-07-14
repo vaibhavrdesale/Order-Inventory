@@ -56,7 +56,7 @@ export class OrdersComponent {
       this.getAllOrders();
     } else {
       switch (Number(this.option)) {
-        case 2:
+        case 4:
           this.ordersService.findByOrderStatus(this.inputData.toUpperCase()).subscribe(
             (response: any) => {
               this.orders = [...response];
@@ -80,11 +80,11 @@ export class OrdersComponent {
               this.totalPages = Math.ceil(this.totalOrders / this.pageSize);
               this.goToPage(this.currentPage);
             },
-            (error: HttpErrorResponse) => {
-              const errMsg = error.error.errorMessage || 'Failed to retrieve orders by store name. Please try again.';
-              console.error('Error retrieving orders by store name:', errMsg);
-              alert(errMsg);
-            }
+            // (error: HttpErrorResponse) => {
+            //   const errMsg = error.error.errorMessage || 'Failed to retrieve orders by store name. Please try again.';
+            //   console.error('Error retrieving orders by store name:', errMsg);
+            //   alert(errMsg);
+            // }
           );
           break;
           case 4: this.getAllOrders()
@@ -133,3 +133,5 @@ export class OrdersComponent {
     return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
   }
 }
+
+

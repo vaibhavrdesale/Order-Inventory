@@ -42,19 +42,7 @@ export class StoreComponent implements OnInit {
     });
   }
 
-  // getAllStores() {
-  //   this.storeService.getAllStores().subscribe(
-  //     (res: any) => {
-  //       this.stores = [...res];
-  //       for (let s of this.stores) {
-  //         // console.log(s.storeId);
-  //       }
-  //     },
-  //     (error: HttpErrorResponse) => {
-  //       console.error('Failed to get stores:', error.error.message);
-  //     }
-  //   );
-  // }
+  
 
 
   currentPage = 1; // Current page number
@@ -161,14 +149,15 @@ updateWebAddress() {
   }
 
   const headers = new HttpHeaders()
-  .set('Content-Type', 'text/plain')
-  .set('Access-Control-Allow-Origin', '*');
+    .set('Content-Type', 'text/plain')
+    .set('Access-Control-Allow-Origin', '*');
 
   this.storeService
     .updateWebAddress(this.storeId, this.webAddress, headers)
     .subscribe(
       (response: any) => {
         console.log('Web address updated successfully:', response);
+        alert('Web address updated successfully');
         // Handle success, show a notification, or navigate to another page
       },
       (error: HttpErrorResponse) => {
@@ -229,12 +218,12 @@ getInventoryByStoreId(): void {
       const errMsg = error.error.errorMessage || 'Failed to fetch inventory data. Please try again.';
       console.log('Error fetching inventory data:', errMsg);
       alert(errMsg);
-      // Add any error handling or notifications here
+      
     }
   );
 }
 
-// pagination code
+
 
 
 }

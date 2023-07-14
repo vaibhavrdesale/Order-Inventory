@@ -1,32 +1,32 @@
 <div class="container math">
-    <div id="productlist">
-      <h3 class="text-center">Inventory</h3>
-      <div class="card">
-        <div class="card-header">
-          <h5>Find by:</h5>
-          <div class="row my-3">
-            <div class="col-md-4">
-              <select class="form-select" name="option" [(ngModel)]="option" (change)="searchByOption()">
-                <option value="1">get all inventories</option>
-                <option value="2">Fetch productdata, storedata, orderstatus matching storied</option>
-                <option value="3">Fetch inventories and matching shipments data</option>
-                <option value="4">Fetch store, product and customer data matching order id</option>
-                <option value="5">Count of orders by status</option>
-                <option value="6">Fetch order details matching storename</option>
-              </select>
-            </div>
+  <div id="productlist">
+    <h3 class="text-center">Inventory</h3>
+    <div class="card">
+      <div class="card-header">
+        <h5>Find by:</h5>
+        <div class="row my-3">
+          <div class="col-md-4">
+            <select class="form-select" name="option" [(ngModel)]="option" (change)="searchByOption()">
+              <option value="1">Get all inventories</option>
+              <option value="2">Get productdata, storedata, orderstatus matching storied</option>
+              <option value="3">Get inventories and shipments by address</option>
+              <option value="4">Get store, product and customer data matching order id</option>
+              <option value="5">Count of orders by status</option>
+              <option value="6">Get order details matching storename</option>
+            </select>
           </div>
+        </div>
 
 
-          <!-- this is fetch all opertion -->
-          <div class="row my-3" *ngIf="option==='1'">
-          <div class="container" >
+        <!-- this is fetch all opertion -->
+        <div class="row my-3" *ngIf="option==='1'">
+          <div class="container">
             <div class="card shadow">
               <div class="card-body">
                 <div *ngIf="inventories.length > 0" class="table-responsive">
                   <h2 class="mb-4">Inventory List</h2>
-                  <table class="table">
-                    <thead>
+                  <table class="table table-bordered">
+                    <thead class="table-success">
                       <tr>
                         <th>Inventory ID</th>
                         <th>Store ID</th>
@@ -35,16 +35,16 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let inventory of inventories">
-                            <td>{{ inventory.inventoryId }}</td>
-                            <td>{{ inventory.storeData.storeId }}</td>
-                            <td>{{ inventory.productData.productId }}</td>
-                            <td>{{ inventory.productInventory }}</td>
-                          </tr>
+                      <tr *ngFor="let inventory of inventories">
+                        <td>{{ inventory.inventoryId }}</td>
+                        <td>{{ inventory.storeData.storeId }}</td>
+                        <td>{{ inventory.productData.productId }}</td>
+                        <td>{{ inventory.productInventory }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
-                
+
                 <div *ngIf="inventories.length === 0">
                   <p>No inventory data available.</p>
                 </div>
@@ -56,215 +56,218 @@
 
 
 
-<!-- fetch prductdata storedata and orderstatus -->
-<div class="row my-3" *ngIf="option==='2'">
-<div class="container">
-    <div class="row">
-      <div class="col-md-6 offset-md-3">
-        <h2>Inventory List</h2>
-        <div class="form-group">
-          <label for="storeId">Store ID:</label>
-          <input type="number" class="form-control" id="storeId" [(ngModel)]="storeId" name="storeId">
-        </div>
-        <button class="btn btn-primary" (click)="fetchInventoryByStoreId()">Fetch Inventory</button>
-        <br><br>
-        <div *ngIf="inventoriesStoreId && inventoriesStoreId.length > 0">
-          <table class="table table-bordered table-responsive">
-            <thead>
-              <tr>
-                <th>Inventory ID</th>
-                <th>Product Name</th>
-                <th>Store Name</th>
-                <th>Order Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let inventory of inventoriesStoreId">
-                <td>{{ inventory.inventoryId }}</td>
-                <td>{{ inventory.productData.productName }}</td>
-                <td>{{ inventory.storeData.storeName }}</td>
-                <td>{{ inventory.orderStatus }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div *ngIf="inventoriesStoreId && inventoriesStoreId.length === 0">
-          <p>No inventory data available.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  </div>
-  
-  
-
-  <!-- fetch storedata product data shipment data -->
-  <div class="row my-3" *ngIf="option==='3'">
-  <div class="container shadow p-3 mb-5 bg-white rounded">
-    <h2>Inventory with Shipments</h2>
-    <div class="mb-3">
-      <label for="deliveryAddressInput" class="form-label">Delivery Address:</label>
-      <input type="text" class="form-control" id="deliveryAddressInput" [(ngModel)]="deliveryAddress">
-    </div>
-    <button class="btn btn-primary" (click)="fetchInventoryWithShipments()">Fetch Inventory</button>
-    
-    <div *ngIf="inventoriesShipment.length > 0">
-      <h3>Inventory List</h3>
-      <table class="table table-bordered custom-table">
-        <thead>
-          <tr>
-            <th>Inventory ID</th>
-            <th>Product Name</th>
-            <th>Store Name</th>
-            <th>Product Inventory</th>
-            <th>Shipment Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let inventory of inventoriesShipment">
-            <td>{{ inventory.inventoryId }}</td>
-            <td>{{ inventory.productData.productName }}</td>
-            <td>{{ inventory.storeData.storeName }}</td>
-            <td>{{ inventory.productInventory }}</td>
-            <td>
-              <div class="shipment-details">
-                <div *ngFor="let shipment of inventory.shipmentData" class="shipment-item">
-                  <div class="shipment-label">Shipment ID:</div> 
-                  <div class="shipment-value">{{ shipment.shipmentId }}</div>
-                  <div class="shipment-label">Delivery Address:</div> 
-                  <div class="shipment-value">{{ shipment.deliveryAddress }}</div>
-                  <div class="shipment-label">Shipment Status:</div> 
-                  <div class="shipment-value">{{ shipment.shipmentStatus }}</div>
+        <!-- fetch prductdata storedata and orderstatus -->
+        <div class="row my-3" *ngIf="option==='2'">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 offset-md-3">
+                <h2>Inventory List</h2>
+                <div class="form-group">
+                  <label for="storeId">Store ID:</label>
+                  <input type="number" class="form-control" id="storeId" [(ngModel)]="storeId" name="storeId" required>
+                  <div *ngIf="!isStoreIdValid()" class="text-danger">Store ID is not available in the database.</div>
+                </div>
+                <button class="btn btn-primary" (click)="fetchInventoryByStoreId()">Fetch Inventory</button>
+                <br><br>
+                <div *ngIf="inventoriesStoreId && inventoriesStoreId.length > 0">
+                  <table class="table table-bordered table-responsive">
+                    <thead>
+                      <tr>
+                        <th>Inventory ID</th>
+                        <th>Product Name</th>
+                        <th>Store Name</th>
+                        <th>Order Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let inventory of inventoriesStoreId">
+                        <td>{{ inventory.inventoryId }}</td>
+                        <td>{{ inventory.productData.productName }}</td>
+                        <td>{{ inventory.storeData.storeName }}</td>
+                        <td>{{ inventory.orderStatus }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div *ngIf="inventoriesStoreId && inventoriesStoreId.length === 0">
+                  <p>No inventory data available.</p>
                 </div>
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div *ngIf="inventoriesShipment.length === 0">
-      <p>No inventory data available for the given delivery address.</p>
-    </div>
-  </div>
-  </div>
+            </div>
+          </div>
+        </div>
+        
+
+
+        <!-- fetch storedata product data shipment data -->
+        <div class="row my-3" *ngIf="option==='3'">
+          <div class="container shadow p-3 mb-5 bg-white rounded">
+            <h2>Inventory with Shipments</h2>
+            <div class="mb-3">
+              <label for="deliveryAddressInput" class="form-label">Delivery Address:</label>
+              <input type="text" class="form-control" id="deliveryAddressInput" [(ngModel)]="deliveryAddress">
+            </div>
+            <button class="btn btn-primary" (click)="fetchInventoryWithShipments()">Fetch Inventory</button>
+
+            <div *ngIf="inventoriesShipment.length > 0">
+              <h3>Inventory List</h3>
+              <table class="table table-bordered custom-table">
+                <thead>
+                  <tr>
+                    <th>Inventory ID</th>
+                    <th>Product Name</th>
+                    <th>Store Name</th>
+                    <th>Product Inventory</th>
+                    <th>Shipment Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let inventory of inventoriesShipment">
+                    <td>{{ inventory.inventoryId }}</td>
+                    <td>{{ inventory.productData.productName }}</td>
+                    <td>{{ inventory.storeData.storeName }}</td>
+                    <td>{{ inventory.productInventory }}</td>
+                    <td>
+                      <div class="shipment-details">
+                        <div *ngFor="let shipment of inventory.shipmentData" class="shipment-item">
+                          <div class="shipment-label">Shipment ID:</div>
+                          <div class="shipment-value">{{ shipment.shipmentId }}</div>
+                          <div class="shipment-label">Delivery Address:</div>
+                          <div class="shipment-value">{{ shipment.deliveryAddress }}</div>
+                          <div class="shipment-label">Shipment Status:</div>
+                          <div class="shipment-value">{{ shipment.shipmentStatus }}</div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="inventoriesShipment.length === 0">
+              <p>No inventory data available for the given delivery address.</p>
+            </div>
+          </div>
+        </div>
 
 
 
-  <!-- inventory by orderid -->
-  <div class="row my-3" *ngIf="option==='4'">
-  <div class="container shadow p-3 mb-5 bg-white rounded">
-    <h2>Inventory By Order ID</h2>
-    <div class="mb-3">
-      <label for="orderIdInput" class="form-label">Order ID:</label>
-      <input type="text" class="form-control" id="orderIdInput" [(ngModel)]="orderId">
-    </div>
-    <button class="btn btn-primary" (click)="fetchInventoryByOrderId()">Fetch Inventory</button>
-    
-    <div *ngIf="inventory">
-      <h3>Inventory Details</h3>
-      <table class="table table-bordered custom-table">
-        <thead>
-          <tr>
-            <th>Inventory ID</th>
-            <th>Product Name</th>
-            <th>Store Name</th>
-            <th>Customer Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ inventory.inventoryId }}</td>
-            <td>{{ inventory.productData.productName }}</td>
-            <td>{{ inventory.storeData.storeName }}</td>
-            <td>{{ inventory.customerData.emailAddress }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  </div>
+        <!-- inventory by orderid -->
+        <div class="row my-3" *ngIf="option==='4'">
+          <div class="container shadow p-3 mb-5 bg-white rounded">
+            <h2>Inventory By Order ID</h2>
+            <div class="mb-3">
+              <label for="orderIdInput" class="form-label">Order ID:</label>
+              <input type="number" class="form-control" id="orderIdInput" [(ngModel)]="orderId" required>
+              <div *ngIf="!isOrderIdValid()" class="text-danger">Order ID is not available in the database.</div>
+            </div>
+            <button class="btn btn-primary" (click)="fetchInventoryByOrderId()">Fetch Inventory</button>
+        
+            <div *ngIf="inventory">
+              <h3>Inventory Details</h3>
+              <table class="table table-bordered custom-table">
+                <thead>
+                  <tr>
+                    <th>Inventory ID</th>
+                    <th>Product Name</th>
+                    <th>Store Name</th>
+                    <th>Customer Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ inventory.inventoryId }}</td>
+                    <td>{{ inventory.productData.productName }}</td>
+                    <td>{{ inventory.storeData.storeName }}</td>
+                    <td>{{ inventory.customerData.emailAddress }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
 
 
-  <!-- inventory by shipment count -->
-  <div class="row my-3" *ngIf="option==='5'">
-  <div class="container shadow p-3 mb-5 bg-white rounded">
-    <h2>Shipment Counts</h2>
-    <div class="mb-3">
-      <label for="shipmentStatusInput" class="form-label">Shipment Status:</label>
-      <input type="text" class="form-control" id="shipmentStatusInput" [(ngModel)]="shipmentStatus">
-    </div>
-    <button class="btn btn-primary" (click)="fetchShipmentCounts()">Fetch Counts</button>
-    
-    <div *ngIf="shipmentCounts.length > 0">
-      <h3>Shipment Count List</h3>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Shipment Status</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let count of shipmentCounts">
-            <td>{{ count.shipmentStatus }}</td>
-            <td>{{ count.count }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div *ngIf="shipmentCounts.length === 0">
-      <p>No shipment counts available.</p>
-    </div>
-  </div>
-  </div>
+        <!-- inventory by shipment count -->
+        <div class="row my-3" *ngIf="option==='5'">
+          <div class="container shadow p-3 mb-5 bg-white rounded">
+            <h2>Shipment Counts</h2>
+            <div class="mb-3">
+              <label for="shipmentStatusInput" class="form-label">Shipment Status:</label>
+              <select class="form-control" id="shipmentStatusInput" [(ngModel)]="shipmentStatus">
+                <option value="DELIVERED">DELIVERED</option>
+                <option value="SHIPPED">SHIPPED</option>
+                <option value="IN-TRANSIT">IN-TRANSIT</option>
+                <option value="CREATED">CREATED</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" (click)="fetchShipmentCounts()">Fetch Counts</button>
+        
+            <div *ngIf="shipmentCounts.length > 0">
+              <h3>Shipment Count List</h3>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Shipment Status</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let count of shipmentCounts">
+                    <td>{{ count.shipmentStatus }}</td>
+                    <td>{{ count.count }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="shipmentCounts.length === 0">
+              <p>No shipment counts available.</p>
+            </div>
+          </div>
+        </div>
+        
 
-  
 
 
-  <!-- Fetch list of Products in a order matching ordered with store details, shipment status and total amount -->
-  <div class="row my-3" *ngIf="option==='6'">
-  <div class="container">
-    <h2>Inventory Details By Order ID</h2>
-    <div class="mb-3">
-      <label for="orderIdInput" class="form-label">Order ID:</label>
-      <input type="text" class="form-control" id="orderIdInput" [(ngModel)]="orderId">
-    </div>
-    <button class="btn btn-primary" (click)="fetchInventoryDetailsByOrderId()">Fetch Inventory Details</button>
-    
-    <div *ngIf="inventoryDetails">
-      <h3>Inventory Details</h3>
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>Unit Price</th>
-              <th>Store Name</th>
-              <th>Web Address</th>
-              <th>Shipment Status</th>
-              <th>Total Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let detail of inventoryDetails">
-              <td>{{ detail.productName }}</td>
-              <td>{{ detail.unitPrice }}</td>
-              <td>{{ detail.storeName }}</td>
-              <td>{{ detail.webAddress }}</td>
-              <td>{{ detail.shipmentStatus }}</td>
-              <td>{{ detail.totalAmount }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  </div>
-  
-  
-  
-  
-  
-           
-  
-          
+
+        <!-- Fetch list of Products in a order matching ordered with store details, shipment status and total amount -->
+        <div class="row my-3" *ngIf="option==='6'">
+          <div class="container">
+            <h2>Inventory Details By Order ID</h2>
+            <div class="mb-3">
+              <label for="orderIdInput" class="form-label">Order ID:</label>
+              <input type="number" class="form-control" id="orderIdInput" [(ngModel)]="orderId" required>
+              <div *ngIf="!isOrderIdAvailable()" class="text-danger">Order ID is not available in the database.</div>
+            </div>
+            <button class="btn btn-primary" (click)="fetchInventoryDetailsByOrderId()">Fetch Inventory Details</button>
+        
+            <div *ngIf="inventoryDetails">
+              <h3>Inventory Details</h3>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Product Name</th>
+                      <th>Unit Price</th>
+                      <th>Store Name</th>
+                      <th>Web Address</th>
+                      <th>Shipment Status</th>
+                      <th>Total Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let detail of inventoryDetails">
+                      <td>{{ detail.productName }}</td>
+                      <td>{{ detail.unitPrice }}</td>
+                      <td>{{ detail.storeName }}</td>
+                      <td>{{ detail.webAddress }}</td>
+                      <td>{{ detail.shipmentStatus }}</td>
+                      <td>{{ detail.totalAmount }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        

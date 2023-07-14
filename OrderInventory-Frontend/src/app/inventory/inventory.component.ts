@@ -79,12 +79,6 @@ export class InventoryComponent implements OnInit {
         console.log(inventoryList); // Log the response to check the structure
         this.inventories = inventoryList;
       },
-      (error: HttpErrorResponse) => {
-        const errMsg = error.error.errorMessage || 'Failed to fetch inventory. Please try again.';
-        console.error('Error fetching inventory:', errMsg);
-        
-        // Add any error handling or notifications here
-      }
     );
   }
   
@@ -97,12 +91,18 @@ export class InventoryComponent implements OnInit {
         this.inventoriesStoreId = inventoryList;
       },
       (error: HttpErrorResponse) => {
-        const errMsg = error.error.errorMessage || 'Failed to fetch inventory by store ID. Please try again.';
-        console.error('Error fetching inventory:', errMsg);
-        alert(errMsg);
+        const errMsg = error.error.errorMessage ;
+        console.error( errMsg);
         
       }
     );
+  }
+  
+  isStoreIdValid(): boolean {
+    // Replace this with your actual logic to check if storeId is available in the database
+    // For demonstration purposes, assume storeId is not available in the database
+    const storeIdsInDatabase: number[] = [2,3,4,6,8,9,12,14,17,18,19,20,21,40,50,60]; 
+    return !storeIdsInDatabase.includes(this.storeId);
   }
   
 
@@ -114,9 +114,9 @@ export class InventoryComponent implements OnInit {
         this.inventoriesShipment = inventoryList;
       },
       (error: HttpErrorResponse) => {
-        const errMsg = error.error.errorMessage || 'Failed to fetch inventory with shipments. Please try again.';
-        console.error('Error fetching inventory with shipments:', errMsg);
-        alert(errMsg);
+        const errMsg = error.error.errorMessage ;
+        console.error( errMsg);
+        
         
       }
     );
@@ -131,12 +131,17 @@ export class InventoryComponent implements OnInit {
         this.inventory = inventory;
       },
       (error: HttpErrorResponse) => {
-        const errMsg = error.error.errorMessage || 'Failed to fetch inventory by order ID. Please try again.';
-        console.error('Error fetching inventory:', errMsg);
-        alert(errMsg);
+        const errMsg = error.error.errorMessage;
+        console.error( errMsg);
+        
         
       }
     );
+  }
+  
+  isOrderIdValid(): boolean {
+    const orderIdsInDatabase: number[] = [1,3,4,7,8]; 
+    return !orderIdsInDatabase.includes(this.orderId);
   }
   
 
@@ -147,9 +152,9 @@ export class InventoryComponent implements OnInit {
         this.shipmentCounts = counts;
       },
       (error: HttpErrorResponse) => {
-        const errMsg = error.error.errorMessage || 'Failed to fetch shipment counts. Please try again.';
-        console.error('Error fetching shipment counts:', errMsg);
-        alert(errMsg);
+        const errMsg = error.error.errorMessage;
+        console.error( errMsg);
+       
         
       }
     );
@@ -164,12 +169,17 @@ export class InventoryComponent implements OnInit {
         this.inventoryDetails = details;
       },
       (error: HttpErrorResponse) => {
-        const errMsg = error.error.errorMessage || 'Failed to fetch inventory details. Please try again.';
-        console.error('Error fetching inventory details:', errMsg);
-        alert(errMsg);
+        const errMsg = error.error.errorMessage;
+        console.error( errMsg);
+        
         
       }
     );
+  }
+  
+  isOrderIdAvailable(): boolean {
+    const orderIdsInDatabase: number[] = [1, 2, 3]; // Example list of order IDs in the database
+    return !orderIdsInDatabase.includes(Number(this.orderId));
   }
   
   

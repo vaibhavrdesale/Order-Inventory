@@ -23,9 +23,9 @@ export class AddOrderComponent implements OnInit {
   initOrderForm(): void {
     this.orderForm = this.formBuilder.group({
       orderId: [0, Validators.required],
-      customerId: ['', Validators.required],
+      customerId: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       orderStatus: ['', Validators.required],
-      storeId: ['', Validators.required]
+      storeId: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
     });
   }
 
@@ -55,5 +55,4 @@ export class AddOrderComponent implements OnInit {
       }
     );
   }
-  
 }

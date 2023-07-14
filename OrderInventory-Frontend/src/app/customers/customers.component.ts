@@ -27,7 +27,7 @@ export class CustomersComponent implements OnInit {
   option!: number ;
   orderByField: any;
   customerForm!: FormGroup;
-
+  visiblePages: number[] = [];
   
   
 
@@ -108,6 +108,37 @@ fetchAllCustomers(): void {
       this.setPage(nextPage);
     }
   }
+  lastPage() {
+    this.currentPage = this.totalPages;
+    this.updatePagedCustomers();
+  }
+  firstPage() {
+    this.currentPage = 1;
+    this.updatePagedCustomers();
+  }
+  updatePagedCustomers(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedCustomers = this.customers.slice(startIndex, endIndex);
+  }
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagedCustomers();
+      this.calculateVisiblePages();
+    }
+  }
+  calculateVisiblePages(): void {
+    const maxVisiblePages = 5; // Adjust this value as per your requirements
+    const startPage = Math.max(this.currentPage - Math.floor(maxVisiblePages / 2), 1);
+    const endPage = Math.min(startPage + maxVisiblePages - 1, this.totalPages);
+
+    this.visiblePages = [];
+    for (let page = startPage; page <= endPage; page++) {
+      this.visiblePages.push(page);
+    }
+  }
+
 
 //add customer 
 addCustomer(): void {

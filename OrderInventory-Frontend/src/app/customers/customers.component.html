@@ -7,14 +7,14 @@
         <div class="row my-3">
           <div class="col-md-4">
             <select class="form-select" name="option" [(ngModel)]="option" (change)="searchByOption()">
-              <option value="1">Fetch all customers</option>
-              <option value="2">Add new Customer object in DB</option>
-              <option value="3">Update customer by object</option>
-              <option value="5">Search Customers Matching Email</option>
-              <option value="6">Shipment status wise count of customers</option>
-              <option value="7">Fetch orders for the respective customer by id</option>
-              <option value="8">Fetch shipment history for the respective customer by id</option>
-              <option value="9">Search Customers Matching name</option>
+              <option value="1">Get All Customers</option>
+              <option value="2">Add new Customer</option>
+              <option value="3">Update customer</option>
+              <option value="5">Search Customers By Email</option>
+              <option value="6">Get Count Of Customer By Shipment Status</option>
+              <option value="7">Get Order By Customer Id</option>
+              <option value="8">Get Shipment History By Customer Id</option>
+              <option value="9">Get Customer By Name</option>
             </select>
           </div>
         </div>
@@ -25,33 +25,50 @@
             <div class="card shadow">
               <div class="card-body">
                 <h3 class="card-title">All Customers</h3>
-
-                <table class="table">
-                  <thead>
+        
+                <table class="table table-bordered">
+                  <thead class="table-success">
                     <tr>
                       <th>Id</th>
                       <th>Email Address</th>
                       <th>Full Name</th>
-
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let customer of pagedCustomers">
-                      <td>{{ customer.customerId}}</td>
+                      <td>{{ customer.customerId }}</td>
                       <td>{{ customer.emailAddress }}</td>
                       <td>{{ customer.fullName }}</td>
-
                     </tr>
                   </tbody>
                 </table>
-                <button class="btn btn-dark" (click)="previousPage()"
-                  [class.disabled]="currentPage === 1">Previous</button>
-                <button class="btn btn-dark mx-2" (click)="nextPage()"
-                  [class.disabled]="currentPage === totalPages">Next</button>
+        
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="pagination-container">
+                  <ul class="pagination">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                      <a class="page-link" (click)="goToPage(1)">First</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                      <a class="page-link" (click)="goToPage(currentPage - 1)">Previous</a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of visiblePages" [class.active]="currentPage === page">
+                      <a class="page-link pagination-link" (click)="goToPage(page)">{{ page }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                      <a class="page-link" (click)="goToPage(currentPage + 1)">Next</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                      <a class="page-link" (click)="goToPage(totalPages)">Last</a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>
         </div>
+        
+        
 
         <!-- this will be render you towards the add custmors -->
         <div class="row my-3" *ngIf="option == 2">
@@ -100,8 +117,8 @@
           <div class="container">
             <div class="card shadow">
               <div class="card-body">
-                <table class="table">
-                  <thead>
+                <table class="table table-bordered">
+                  <thead class="table-success">
                     <tr>
                       <th>Customer ID</th>
                       <th>Full Name</th>
@@ -159,8 +176,8 @@
           <div *ngIf="pagedCustomers.length > 0">
             <div class="card-body">
               <h3 class="card-title">Searched Customers</h3>
-              <table class="table table-striped">
-                <thead>
+              <table class="table table-bordered">
+                <thead class="table-success">
                   <tr>
                     <th>Email Address</th>
                     <th>Full Name</th>
@@ -195,18 +212,22 @@
         <div class="row my-3" *ngIf="option == 6">
           <div>
             <label for="shipmentStatus">Shipment Status:</label>
-            <input type="text" [(ngModel)]="shipmentStatus" id="shipmentStatus"
-              [ngClass]="{'is-invalid': shipmentStatusInvalid}">
-            <div *ngIf="shipmentStatusInvalid" class="text-danger">Please enter a valid shipment
-              status(Ex:-DELIVERED,SHIPPED,IN-TRANSIT,CREATED).</div>
-            <button (click)="getCustomerCount()">Get Count</button>
+            <select class="form-control" id="shipmentStatusInput" [(ngModel)]="shipmentStatus">
+              <option value="DELIVERED">DELIVERED</option>
+              <option value="SHIPPED">SHIPPED</option>
+              <!-- <option value="IN-TRANSIT">IN-TRANSIT</option> -->
+              <option value="CREATED">CREATED</option>
+            </select>
+            <div *ngIf="shipmentStatusInvalid" class="text-danger">Please enter a valid shipment status (Ex: DELIVERED, SHIPPED, IN-TRANSIT, CREATED).</div>
+            <button (click)="getCustomerCount()" class="btn btn-dark">Get Count</button>
           </div>
-
+        
           <div *ngIf="countDto">
             <h3>Count: {{ countDto.countCustomer }}</h3>
             <h4>Shipment Status: {{ countDto.shipmentStatus }}</h4>
           </div>
         </div>
+        
 
 
 
@@ -222,7 +243,7 @@
           </div>
 
           <table *ngIf="shipmentStatusList.length > 0">
-            <thead>
+            <thead class="table-success">
               <tr>
                 <th>Shipment ID</th>
                 <th>Store ID</th>
@@ -242,11 +263,7 @@
             </tbody>
           </table>
         </div>
-<<<<<<< HEAD
-=======
         
-
->>>>>>> 7687c35f051fc3120be74eef12d26573641793f7
 
         <!-- get orders by customrer id  -->
         <div class="row my-3" *ngIf="option == 7">
@@ -261,8 +278,8 @@
 
           <h2>Order List</h2>
 
-          <table>
-            <thead>
+          <table class="table table-bordered">
+            <thead class="table-success">
               <tr>
                 <th>Order ID</th>
                 <th>Order Date</th>
@@ -290,7 +307,7 @@
             <div class="card-body">
               <div>
                 <input [(ngModel)]="fullName" placeholder="Enter full name" required pattern="[a-zA-Z\s]*">
-                <button (click)="searchCustomersByFullName()">Search</button>
+                <button (click)="searchCustomersByFullName()" class="btn btn-dark mx-2">Search</button>
                 <div *ngIf="!isFullNameValid()" class="text-danger">
                   <div *ngIf="isNumerice(fullName)">
                     Please enter a valid full name.
@@ -300,7 +317,7 @@
                   </div>
                 </div>
               </div>
-
+        
               <table *ngIf="customers">
                 <thead>
                   <tr>

@@ -1,4 +1,3 @@
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -18,13 +17,17 @@ export class ProductComponent implements OnInit {
   option!: number;
   minUnitPrice!: number;
   maxUnitPrice!: number;
-  
+  currentPage = 1;
+  itemsPerPage = 10;
+  totalPages = 0;
   orderByField!: string ;
 
-  //required for serach ny prodname
+  //required for search by prodname
   productName: string = '';
   searchTerm: string = '';
   searchResults: Product[] = [];
+  pagedProducts: Product[] = [];
+  visiblePages: number[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -45,9 +48,17 @@ export class ProductComponent implements OnInit {
   saveProduct(): void {
     if (this.productForm.valid) {
       const product: Product = this.productForm.value;
+  
+      // Check if the product already exists
+      if (this.productAlreadyExists(product)) {
+        console.log('Product already exists');
+        alert('Product already exists');
+        return; // Stop further execution
+      }
+  
       this.productService.saveProduct(product).subscribe(
         () => {
-          console.log('Product saved successfully:');
+          console.log('Product saved successfully');
           alert('Product saved successfully');
         },
         (error: HttpErrorResponse) => {
@@ -63,22 +74,76 @@ export class ProductComponent implements OnInit {
     }
   }
   
-  
-//for getting all the products  
-getProducts(): void {
-  this.productService.getProducts().subscribe(
-    (response: any) => {
-      this.productsList = [...response];
-    },
-    (error: HttpErrorResponse) => {
-      const errMsg = error.error.errorMessage || 'Failed to fetch products. Please try again.';
-      console.error('Error fetching products:', errMsg);
-      alert(errMsg);
-      
-    }
-  );
-}
+  productAlreadyExists(product: Product): boolean {
+    const existingProduct = this.productsList.find(p => p.productName === product.productName);
+    return !!existingProduct;
+  }
 
+  
+  
+  // For getting all the products  
+  getProducts(): void {
+    this.productService.getProducts().subscribe(
+      (response: any) => {
+        this.productsList = [...response];
+        this.calculateTotalPages();
+        this.setPage(1);
+        this.calculateVisiblePages();
+      },
+      (error: HttpErrorResponse) => {
+        const errMsg = error.error.errorMessage || 'Failed to fetch products. Please try again.';
+        console.error('Error fetching products:', errMsg);
+        alert(errMsg);
+      }
+    );
+  }
+
+  // Pagination
+  calculateTotalPages(): void {
+    this.totalPages = Math.ceil(this.productsList.length / this.itemsPerPage);
+  }
+
+  setPage(page: number): void {
+    const startIndex = (page - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedProducts = this.productsList.slice(startIndex, endIndex);
+    this.currentPage = page;
+  }
+
+  firstPage(): void {
+    this.setPage(1);
+  }
+
+  previousPage(): void {
+    const prevPage = this.currentPage - 1;
+    if (prevPage >= 1) {
+      this.setPage(prevPage);
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.setPage(page);
+      this.calculateVisiblePages();
+    }
+  }
+
+  nextPage(): void {
+    const nextPage = this.currentPage + 1;
+    if (nextPage <= this.totalPages) {
+      this.setPage(nextPage);
+    }
+  }
+
+  lastPage(): void {
+    this.setPage(this.totalPages);
+  }
+
+  calculateVisiblePages(): void {
+    const startPage = Math.max(1, this.currentPage - 3);
+    const endPage = Math.min(startPage + 6, this.totalPages);
+    this.visiblePages = Array.from({ length: endPage - startPage + 1 }, (_, i) => i + startPage);
+  }
 
   // search by product name method.
   searchByProdName(): void {

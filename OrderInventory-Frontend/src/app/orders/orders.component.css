@@ -1,0 +1,66 @@
+.custom-container {
+    margin-top: 20px;
+  }
+  
+  .card {
+    margin-top: 20px;
+    padding: 20px;
+  }
+  
+  .pagination-container {
+    margin-top: 20px;
+  }
+  
+  .pagination-link {
+    cursor: pointer;
+  }
+  
+  .table-responsive {
+    margin-top: 20px;
+  }
+  
+  .table-bordered {
+    border: 1px solid #dee2e6;
+  }
+  
+  .table-bordered th,
+  .table-bordered td {
+    border: 1px solid #dee2e6;
+  }
+  
+  .table-success {
+    background-color: #c3e6cb;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+  }
+  
+  .btn-outline-dark {
+    background-color: transparent;
+    border-color: #343a40;
+    color: #343a40;
+  }
+  
+  .btn-outline-dark:hover {
+    background-color: #343a40;
+    color: #fff;
+  }
+  
+  .btn-outline-primary {
+    background-color: transparent;
+    border-color: #007bff;
+    color: #007bff;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+  .pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
