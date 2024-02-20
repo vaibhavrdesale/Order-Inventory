@@ -21,7 +21,6 @@ import com.orderinventory.dto.ShipmentStatusCountDTO;
 import com.orderinventory.exception.CustomException;
 import com.orderinventory.services.InventoryService;
 
-
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "http://localhost:4200")
