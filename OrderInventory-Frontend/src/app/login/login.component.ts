@@ -13,7 +13,12 @@ export class LoginComponent {
   email!: string;
   password!: string;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    if (localStorage.getItem('token')) {
+      this.router.navigate(['/home1']);
+    }
+    
+  }
 
   login(): void {
     this.authService.login(this.email, this.password).subscribe(
@@ -21,11 +26,11 @@ export class LoginComponent {
         // Save token to local storage
         localStorage.setItem('token', response.token);
         
-        // Redirect to protected route or perform necessary actions
+        // Redirect to protected route 
         this.router.navigate(['/home1']);
       },
       (error: any) => {
-        // Handle login error
+        alert("username or password is wrong")
       }
     );
   }
